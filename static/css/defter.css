@@ -1,0 +1,29 @@
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
+body {
+	font-family: sans-serif;
+	font-size: 16px;
+	background-image: url('/static/linedpaper.png');
+}
+
+div.wrapper {
+	width: 100%;
+	position: relative;
+	height: 100%;
+	box-sizing: border-box;
+	padding-top: 39px;
+	padding-left: 50px;
+}
+
+div#corner {
+	background-image: url('/static/corner.png');
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	right: 0px;
+	top: 0px;
+}
+

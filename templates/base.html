@@ -1,0 +1,18 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="/static/css/defter.css">
+	<script src="/static/js/defter.js"></script>
+</head>
+<body>
+	<div class="wrapper">
+		<div id="corner"></div>
+		<a href="/new">New Page</a><br>
+		{{template "body" .}}
+	</div>
+</body>
+</html>
+{{end}}
