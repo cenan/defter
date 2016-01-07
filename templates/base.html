@@ -4,13 +4,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
+	<link href='https://fonts.googleapis.com/css?family=Kalam&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="/static/css/defter.css">
 	<script src="/static/js/defter.js"></script>
 </head>
 <body>
 	<div class="wrapper">
 		<div id="corner"></div>
-		<a href="/new">New Page</a><br>
+		<div class="top-links">
+			<a href="/">Indeks</a>
+			<a href="/new">Yeni</a>
+		</div>
 		{{template "body" .}}
 	</div>
 </body>

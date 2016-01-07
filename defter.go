@@ -29,16 +29,16 @@ func startWebClient(db *sql.DB, port int) {
 func main() {
 	verboseOutput := flag.Bool("verbose", false, "verbose output")
 	port := flag.Int("port", 5000, "server port")
+	db_path := flag.String("db", "/Users/cenan/Dropbox/defter.sqlite", "database file")
 	flag.Parse()
 
 	if *verboseOutput == false {
 		log.SetOutput(ioutil.Discard)
 	}
 
-	const db_path = "./db/defter.sqlite"
-	db, err := sql.Open("sqlite3", db_path)
+	db, err := sql.Open("sqlite3", *db_path)
 	if err != nil {
-		panic("Cannot open database: " + db_path)
+		panic("Cannot open database: " + *db_path)
 	}
 	defer db.Close()
 	startWebClient(db, *port)
