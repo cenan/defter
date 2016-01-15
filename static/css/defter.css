@@ -162,3 +162,14 @@ div.note-card a.edit-link {
 div.note-card a.edit-link:hover {
 	color: #313131;
 }
+
+.btn {
+	background-color: #f0f0f0;
+	color: #313131;
+	border: 1px solid #ccc;
+	padding: 5px 13px;
+}
+
+.btn:hover {
+	background-color: #fff;
+}
