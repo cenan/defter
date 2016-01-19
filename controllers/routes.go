@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/cenan/defter/models"
 )
@@ -40,7 +41,8 @@ func CreatePage(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("title")
 		body := r.FormValue("content")
-		_, err := db.Exec("INSERT INTO pages (title,content) VALUES (?, ?)", title, body)
+		now := strconv.FormatInt(time.Now().Unix(), 10)
+		_, err := db.Exec("INSERT INTO pages (title,content, updated_at) VALUES (?, ?, ?)", title, body, now)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -99,7 +101,8 @@ func SavePage(db *sql.DB) http.HandlerFunc {
 		}
 		title := r.FormValue("title")
 		body := r.FormValue("content")
-		_, err = db.Exec("UPDATE pages SET title=?, content=? WHERE id=?", title, body, id)
+		now := strconv.FormatInt(time.Now().Unix(), 10)
+		_, err = db.Exec("UPDATE pages SET title=?, content=?, updated_at=? WHERE id=?", title, body, now, id)
 		if err != nil {
 			log.Fatal(err)
 		}

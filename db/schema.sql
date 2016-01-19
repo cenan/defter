@@ -1,5 +1,7 @@
-CREATE TABLE `pages` (
+CREATE TABLE IF NOT EXISTS `pages` (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `title` VARCHAR(255) NULL,
     `content` TEXT
 );
+
+ALTER TABLE `pages` ADD COLUMN updated_at INTEGER;

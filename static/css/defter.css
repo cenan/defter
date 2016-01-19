@@ -1,16 +1,84 @@
+/* resets */
+
 * {
-	padding: 0px;
-	margin: 0px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-family: 'Kalam', cursive;
+	font-size: 16px;
+	line-height: 1.5em;
 }
 
 body {
-	font-family: 'Kalam', cursive;
-	font-size: 16px;
-	background-image: url('/static/linedpaper.png');
+	color: #515151;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
 }
 
 a {
 	text-decoration: none;
+}
+
+a strong {
+	color: inherit;
+}
+
+a:hover,
+a:focus {
+	text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: .5rem;
+  font-weight: bold;
+  line-height: 1.25;
+  color: #313131;
+  text-rendering: optimizeLegibility;
+}
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+h3 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+}
+h4, h5, h6 {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+code,
+pre {
+	font-family: Menlo, Monaco, "Courier New", monospace;
+}
+
+pre code {
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+	background-color: transparent;
+}
+
+/* defter styles */
+
+body {
+	background-image: url('/static/linedpaper.png');
+}
+
+a {
 	color: #4477aa;
 }
 
@@ -54,4 +122,43 @@ div.top-links a {
 
 div.top-links a:hover {
 
+}
+
+div.notes-container {
+	clear: both;
+	font-size: 0px;
+}
+
+div.note-card {
+	font-size: 16px;
+	position: relative;
+	background-color: #eee;
+	width: 150px;
+	height: 150px;
+	/*float: left;*/
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	cursor: default;
+}
+
+div.note-card:hover {
+	background-color: #fff;
+}
+
+div.note-card a.caption {
+	color: #313131;
+}
+
+div.note-card a.edit-link {
+	position: absolute;
+	bottom: 3px;
+	right: 3px;
+	color: #ddd;
+	-webkit-user-select: none;
+}
+
+div.note-card a.edit-link:hover {
+	color: #313131;
 }

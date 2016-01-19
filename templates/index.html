@@ -1,10 +1,11 @@
 {{define "body"}}
-<table>
+<div class="notes-container">
 	{{range .}}
-	<tr>
-		<td><a href="/show?id={{.Id}}">{{.Title}}</a></td>
-		<td><a href="/edit?id={{.Id}}">düzenle</a></td>
-	</tr>
+	<div class="note-card">
+		<a href="/show?id={{.Id}}" class="caption">{{.Title}}</a><br>
+		{{.LastUpdate}}
+		<a href="/edit?id={{.Id}}" class="edit-link">düzenle</a>
+	</div>
 	{{end}}
-</table>
+</div>
 {{end}}
