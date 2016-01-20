@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"html/template"
+	"strconv"
 	"time"
 
 	"github.com/russross/blackfriday"
@@ -21,6 +22,17 @@ func (p Page) LastUpdate() string {
 	return t.Format(time.RFC1123Z)
 }
 
+func (p *Page) Save(db *sql.DB) error {
+	var err error
+	now := strconv.FormatInt(time.Now().Unix(), 10)
+	if p.Id != 0 {
+		_, err = db.Exec("UPDATE pages SET title=?, content=?, updated_at=? WHERE id=?", p.Title, p.Content, now, p.Id)
+	} else {
+		_, err = db.Exec("INSERT INTO pages (title,content, updated_at) VALUES (?, ?, ?)", p.Title, p.Content, now)
+	}
+	return err
+}
+
 func FindPage(db *sql.DB, id int) (Page, error) {
 	var title []byte
 	var input string
@@ -32,7 +44,7 @@ func FindPage(db *sql.DB, id int) (Page, error) {
 		return Page{}, err
 	}
 	output := blackfriday.MarkdownCommon([]byte(input))
-	return Page{Id: id,Title: string(title),Content: input,HTMLContent: template.HTML(output),UpdatedAt: updated_at}, nil
+	return Page{Id: id, Title: string(title), Content: input, HTMLContent: template.HTML(output), UpdatedAt: updated_at}, nil
 }
 
 func AllPages(db *sql.DB) ([]Page, error) {

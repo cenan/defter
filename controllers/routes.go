@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/cenan/defter/models"
 )
@@ -39,10 +38,8 @@ func NewPage(db *sql.DB) http.HandlerFunc {
 
 func CreatePage(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		title := r.FormValue("title")
-		body := r.FormValue("content")
-		now := strconv.FormatInt(time.Now().Unix(), 10)
-		_, err := db.Exec("INSERT INTO pages (title,content, updated_at) VALUES (?, ?, ?)", title, body, now)
+		page := models.Page{Title: r.FormValue("title"), Content: r.FormValue("content")}
+		err := page.Save(db)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -99,14 +96,11 @@ func SavePage(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		title := r.FormValue("title")
-		body := r.FormValue("content")
-		now := strconv.FormatInt(time.Now().Unix(), 10)
-		_, err = db.Exec("UPDATE pages SET title=?, content=?, updated_at=? WHERE id=?", title, body, now, id)
+		page := models.Page{Id: id, Title: r.FormValue("title"), Content: r.FormValue("content")}
+		err = page.Save(db)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Saving page: ", id)
 		http.Redirect(w, r, fmt.Sprintf("/show?id=%d", id), http.StatusFound)
 	}
 }
