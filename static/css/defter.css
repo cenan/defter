@@ -124,6 +124,10 @@ div.top-links a:hover {
 
 }
 
+.search-form {
+	display: inline-block;
+}
+
 div.notes-container {
 	clear: both;
 	font-size: 0px;

@@ -15,6 +15,7 @@ import (
 
 func startWebClient(db *sql.DB, port int) {
 	http.Handle("/", controllers.IndexPage(db))
+	http.Handle("/search", controllers.SearchPage(db))
 	http.Handle("/new", controllers.NewPage(db))
 	http.Handle("/create", controllers.CreatePage(db))
 	http.Handle("/show", controllers.ShowPage(db))
@@ -27,7 +28,7 @@ func startWebClient(db *sql.DB, port int) {
 }
 
 func main() {
-	verboseOutput := flag.Bool("verbose", false, "verbose output")
+	verboseOutput := flag.Bool("verbose", true, "verbose output")
 	port := flag.Int("port", 5000, "server port")
 	db_path := flag.String("db", "/Users/cenan/Dropbox/defter.sqlite", "database file")
 	flag.Parse()

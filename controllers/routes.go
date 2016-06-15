@@ -26,6 +26,21 @@ func IndexPage(db *sql.DB) http.HandlerFunc {
 	}
 }
 
+func SearchPage(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		pages, err := models.Search(db, r.URL.Query().Get("query"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		t := getTemplate("index")
+		err = t.ExecuteTemplate(w, "base", pages)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+}
+
 func NewPage(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		t := getTemplate("new")

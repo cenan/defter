@@ -19,7 +19,7 @@ type Page struct {
 
 func (p Page) LastUpdate() string {
 	t := time.Unix(p.UpdatedAt, 0)
-	return t.Format(time.RFC1123Z)
+	return t.Format("02-01-2006 15:04")
 }
 
 func (p *Page) Save(db *sql.DB) error {
@@ -55,6 +55,28 @@ func AllPages(db *sql.DB) ([]Page, error) {
 	var updated_at int64
 
 	rows, err := db.Query("SELECT id, title, content, updated_at FROM pages ORDER BY updated_at DESC")
+	if err != nil {
+		return pages, err
+	}
+	for rows.Next() {
+		err = rows.Scan(&id, &title, &input, &updated_at)
+		if err != nil {
+			return pages, err
+		}
+		output := blackfriday.MarkdownCommon(input)
+		pages = append(pages, Page{Id: id, Title: string(title), HTMLContent: template.HTML(output), UpdatedAt: updated_at})
+	}
+	return pages, nil
+}
+
+func Search(db *sql.DB, query string) ([]Page, error) {
+	var pages []Page
+	var id int
+	var title []byte
+	var input []byte
+	var updated_at int64
+
+	rows, err := db.Query("SELECT id, title, content, updated_at FROM pages WHERE title like ? or content like ? ORDER BY updated_at DESC", "%"+query+"%", "%"+query+"%")
 	if err != nil {
 		return pages, err
 	}

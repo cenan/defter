@@ -15,6 +15,9 @@
 		<div class="top-links">
 			<a href="/">Indeks</a>
 			<a href="/new">Yeni</a>
+			<form method="get" action="/search" class="search-form">
+				<input type="text" name="query" id="query">
+			</form>
 		</div>
 		{{template "body" .}}
 	</div>
