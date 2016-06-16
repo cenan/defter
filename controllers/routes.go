@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/cenan/defter/models"
@@ -117,6 +118,12 @@ func SavePage(db *sql.DB) http.HandlerFunc {
 			log.Fatal(err)
 		}
 		http.Redirect(w, r, fmt.Sprintf("/show?id=%d", id), http.StatusFound)
+	}
+}
+
+func Close() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		os.Exit(0)
 	}
 }
 

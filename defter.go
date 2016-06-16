@@ -21,6 +21,7 @@ func startWebClient(db *sql.DB, port int) {
 	http.Handle("/show", controllers.ShowPage(db))
 	http.Handle("/edit", controllers.EditPage(db))
 	http.Handle("/save", controllers.SavePage(db))
+	http.Handle("/close", controllers.Close())
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	log.Printf("Started serving on port %d", port)
