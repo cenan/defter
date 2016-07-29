@@ -177,3 +177,25 @@ div.note-card a.edit-link:hover {
 .btn:hover {
 	background-color: #fff;
 }
+
+table {
+	border-collapse: collapse;
+}
+
+tr th {
+	background-color: #e0e0e0;
+}
+
+table tr:nth-child(even) {
+	background-color: #fff;
+}
+
+table tr:nth-child(odd) {
+	background-color: #f0f0f0;
+}
+
+table td {
+	border: 1px solid #ccc;
+	padding: 5px 10px;
+}
+
