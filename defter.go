@@ -11,6 +11,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/cenan/defter/controllers"
+	"github.com/skratchdot/open-golang/open"
 )
 
 func startWebClient(db *sql.DB, port int) {
@@ -25,6 +26,7 @@ func startWebClient(db *sql.DB, port int) {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	log.Printf("Started serving on port %d", port)
+	open.Run(fmt.Sprintf("http://localhost:%d", port))
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
