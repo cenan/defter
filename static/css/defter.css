@@ -199,3 +199,6 @@ table td {
 	padding: 5px 10px;
 }
 
+del {
+	background-color: #CCC;
+}
