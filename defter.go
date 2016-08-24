@@ -14,7 +14,7 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
-func startWebClient(db *sql.DB, port int) {
+func setupRoutes(db *sql.DB) {
 	http.Handle("/", controllers.IndexPage(db))
 	http.Handle("/search", controllers.SearchPage(db))
 	http.Handle("/new", controllers.NewPage(db))
@@ -25,6 +25,10 @@ func startWebClient(db *sql.DB, port int) {
 	http.Handle("/close", controllers.Close())
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+}
+
+func startWebClient(db *sql.DB, port int) {
+	setupRoutes(db)
 	log.Printf("Started serving on port %d", port)
 	open.Run(fmt.Sprintf("http://localhost:%d", port))
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
@@ -33,14 +37,14 @@ func startWebClient(db *sql.DB, port int) {
 func main() {
 	verboseOutput := flag.Bool("verbose", true, "verbose output")
 	port := flag.Int("port", 5000, "server port")
-	db_path := flag.String("db", "/Users/cenan/Dropbox/defter.sqlite", "database file")
+	dbPath := flag.String("db", "/Users/cenan/Dropbox/defter.sqlite", "database file")
 	flag.Parse()
 
 	if *verboseOutput == false {
 		log.SetOutput(ioutil.Discard)
 	}
 
-	db, err := sql.Open("sqlite3", *db_path)
+	db, err := sql.Open("sqlite3", *dbPath)
 	if err != nil {
 		panic("Cannot open database: " + *db_path)
 	}

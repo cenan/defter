@@ -10,7 +10,7 @@ import (
 )
 
 type Page struct {
-	Id          int
+	ID          int
 	Title       string
 	Content     string
 	HTMLContent template.HTML
@@ -25,10 +25,12 @@ func (p Page) LastUpdate() string {
 func (p *Page) Save(db *sql.DB) error {
 	var err error
 	now := strconv.FormatInt(time.Now().Unix(), 10)
-	if p.Id != 0 {
-		_, err = db.Exec("UPDATE pages SET title=?, content=?, updated_at=? WHERE id=?", p.Title, p.Content, now, p.Id)
+	if p.ID != 0 {
+		sql := "UPDATE pages SET title=?, content=?, updated_at=? WHERE id=?"
+		_, err = db.Exec(sql, p.Title, p.Content, now, p.ID)
 	} else {
-		_, err = db.Exec("INSERT INTO pages (title,content, updated_at) VALUES (?, ?, ?)", p.Title, p.Content, now)
+		sql := "INSERT INTO pages (title,content, updated_at) VALUES (?, ?, ?)"
+		_, err = db.Exec(sql, p.Title, p.Content, now)
 	}
 	return err
 }
@@ -36,15 +38,23 @@ func (p *Page) Save(db *sql.DB) error {
 func FindPage(db *sql.DB, id int) (Page, error) {
 	var title []byte
 	var input string
-	var updated_at int64
+	var updatedAt int64
 
-	row := db.QueryRow("SELECT title, content, updated_at FROM pages WHERE id=?", id)
-	err := row.Scan(&title, &input, &updated_at)
+	sql := "SELECT title, content, updated_at FROM pages WHERE id=?"
+	row := db.QueryRow(sql, id)
+	err := row.Scan(&title, &input, &updatedAt)
 	if err != nil {
 		return Page{}, err
 	}
 	output := blackfriday.MarkdownCommon([]byte(input))
-	return Page{Id: id, Title: string(title), Content: input, HTMLContent: template.HTML(output), UpdatedAt: updated_at}, nil
+	page := Page{
+		ID:          id,
+		Title:       string(title),
+		Content:     input,
+		HTMLContent: template.HTML(output),
+		UpdatedAt:   updatedAt,
+	}
+	return page, nil
 }
 
 func AllPages(db *sql.DB) ([]Page, error) {
@@ -52,19 +62,26 @@ func AllPages(db *sql.DB) ([]Page, error) {
 	var id int
 	var title []byte
 	var input []byte
-	var updated_at int64
+	var updatedAt int64
 
-	rows, err := db.Query("SELECT id, title, content, updated_at FROM pages ORDER BY updated_at DESC")
+	sql := "SELECT id, title, content, updated_at FROM pages ORDER BY updated_at DESC"
+	rows, err := db.Query(sql)
 	if err != nil {
 		return pages, err
 	}
 	for rows.Next() {
-		err = rows.Scan(&id, &title, &input, &updated_at)
+		err = rows.Scan(&id, &title, &input, &updatedAt)
 		if err != nil {
 			return pages, err
 		}
 		output := blackfriday.MarkdownCommon(input)
-		pages = append(pages, Page{Id: id, Title: string(title), HTMLContent: template.HTML(output), UpdatedAt: updated_at})
+		page := Page{
+			ID:          id,
+			Title:       string(title),
+			HTMLContent: template.HTML(output),
+			UpdatedAt:   updatedAt,
+		}
+		pages = append(pages, page)
 	}
 	return pages, nil
 }
@@ -74,19 +91,33 @@ func Search(db *sql.DB, query string) ([]Page, error) {
 	var id int
 	var title []byte
 	var input []byte
-	var updated_at int64
+	var updatedAt int64
 
-	rows, err := db.Query("SELECT id, title, content, updated_at FROM pages WHERE title like ? or content like ? ORDER BY updated_at DESC", "%"+query+"%", "%"+query+"%")
+	sql := "" +
+		"SELECT" +
+		"	id, title, content, updated_at " +
+		"FROM" +
+		"	pages " +
+		"WHERE" +
+		"	title like ? or content like ? " +
+		"ORDER BY updated_at DESC"
+	rows, err := db.Query(sql, "%"+query+"%", "%"+query+"%")
 	if err != nil {
 		return pages, err
 	}
 	for rows.Next() {
-		err = rows.Scan(&id, &title, &input, &updated_at)
+		err = rows.Scan(&id, &title, &input, &updatedAt)
 		if err != nil {
 			return pages, err
 		}
 		output := blackfriday.MarkdownCommon(input)
-		pages = append(pages, Page{Id: id, Title: string(title), HTMLContent: template.HTML(output), UpdatedAt: updated_at})
+		page := Page{
+			ID:          id,
+			Title:       string(title),
+			HTMLContent: template.HTML(output),
+			UpdatedAt:   updatedAt,
+		}
+		pages = append(pages, page)
 	}
 	return pages, nil
 }

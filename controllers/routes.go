@@ -54,7 +54,10 @@ func NewPage(db *sql.DB) http.HandlerFunc {
 
 func CreatePage(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		page := models.Page{Title: r.FormValue("title"), Content: r.FormValue("content")}
+		page := models.Page{
+			Title:   r.FormValue("title"),
+			Content: r.FormValue("content"),
+		}
 		err := page.Save(db)
 		if err != nil {
 			log.Fatal(err)
@@ -112,7 +115,11 @@ func SavePage(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		page := models.Page{Id: id, Title: r.FormValue("title"), Content: r.FormValue("content")}
+		page := models.Page{
+			ID:      id,
+			Title:   r.FormValue("title"),
+			Content: r.FormValue("content"),
+		}
 		err = page.Save(db)
 		if err != nil {
 			log.Fatal(err)
@@ -128,5 +135,6 @@ func Close() http.HandlerFunc {
 }
 
 func getTemplate(templateName string) *template.Template {
-	return template.Must(template.ParseFiles("templates/base.html", "templates/"+templateName+".html"))
+	t, err := template.ParseFiles("templates/base.html", "templates/"+templateName+".html")
+	return template.Must(t, err)
 }
