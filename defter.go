@@ -46,7 +46,7 @@ func main() {
 
 	db, err := sql.Open("sqlite3", *dbPath)
 	if err != nil {
-		panic("Cannot open database: " + *db_path)
+		panic("Cannot open database: " + *dbPath)
 	}
 	defer db.Close()
 	startWebClient(db, *port)
