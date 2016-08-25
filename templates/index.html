@@ -2,9 +2,9 @@
 <div class="notes-container">
 	{{range .}}
 	<div class="note-card">
-		<a href="/show?id={{.Id}}" class="caption">{{.Title}}</a><br>
+		<a href="/show?id={{.ID}}" class="caption">{{.Title}}</a><br>
 		{{.LastUpdate}}
-		<a href="/edit?id={{.Id}}" class="edit-link">düzenle</a>
+		<a href="/edit?id={{.ID}}" class="edit-link">düzenle</a>
 	</div>
 	{{end}}
 </div>

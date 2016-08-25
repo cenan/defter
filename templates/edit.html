@@ -1,5 +1,5 @@
 {{define "body"}}
-<form action="/save?id={{ .Id }}" method="post">
+<form action="/save?id={{ .ID }}" method="post">
 	<input type="text" name="title" value="{{.Title}}"><br>
 	<textarea name="content" rows=10 cols=60>{{.Content}}</textarea>
 	<br>

@@ -93,14 +93,14 @@ func Search(db *sql.DB, query string) ([]Page, error) {
 	var input []byte
 	var updatedAt int64
 
-	sql := "" +
-		"SELECT" +
-		"	id, title, content, updated_at " +
-		"FROM" +
-		"	pages " +
-		"WHERE" +
-		"	title like ? or content like ? " +
-		"ORDER BY updated_at DESC"
+	sql := `
+		SELECT
+			id, title, content, updated_at
+		FROM
+			pages
+		WHERE
+			title like ? or content like ?
+		ORDER BY updated_at DESC`
 	rows, err := db.Query(sql, "%"+query+"%", "%"+query+"%")
 	if err != nil {
 		return pages, err
