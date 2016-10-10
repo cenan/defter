@@ -9,7 +9,6 @@
 html,
 body {
 	margin: 0;
-	padding: 0;
 }
 
 html {
@@ -65,11 +64,16 @@ pre {
 	font-family: Menlo, Monaco, "Courier New", monospace;
 }
 
+pre {
+	background-color: #fff;
+	border: 1px solid #ddd;
+	overflow-x: auto;
+}
+
 pre code {
 	padding: 0;
-	font-size: 100%;
+	font-size: 0.8125rem;
 	color: inherit;
-	background-color: transparent;
 }
 
 /* defter styles */
@@ -95,6 +99,7 @@ div.wrapper {
 	box-sizing: border-box;
 	padding-top: 39px;
 	padding-left: 50px;
+	padding-right: 30px;
 }
 
 div#corner {
