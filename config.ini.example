@@ -1,0 +1,8 @@
+[general]
+verbose=false
+
+[server]
+port=5000
+
+[db]
+path="/home/user/.defter/db.sqlite"

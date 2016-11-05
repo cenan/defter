@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/cenan/defter/controllers"
 	"github.com/skratchdot/open-golang/open"
+	"gopkg.in/ini.v1"
 )
 
 func setupRoutes(db *sql.DB) {
@@ -34,20 +34,25 @@ func startWebClient(db *sql.DB, port int) {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
-func main() {
-	verboseOutput := flag.Bool("verbose", true, "verbose output")
-	port := flag.Int("port", 5000, "server port")
-	dbPath := flag.String("db", "/Users/cenan/Dropbox/defter.sqlite", "database file")
-	flag.Parse()
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
 
-	if *verboseOutput == false {
+func main() {
+	cfg, err := ini.Load("config.ini")
+	checkError(err)
+	verboseOutput, err := cfg.Section("general").Key("verbose").Bool()
+	checkError(err)
+	dbPath := cfg.Section("db").Key("path").String()
+	port, err := cfg.Section("server").Key("port").Int()
+	checkError(err)
+	if verboseOutput == false {
 		log.SetOutput(ioutil.Discard)
 	}
-
-	db, err := sql.Open("sqlite3", *dbPath)
-	if err != nil {
-		panic("Cannot open database: " + *dbPath)
-	}
+	db, err := sql.Open("sqlite3", dbPath)
+	checkError(err)
 	defer db.Close()
-	startWebClient(db, *port)
+	startWebClient(db, port)
 }
