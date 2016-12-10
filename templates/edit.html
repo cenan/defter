@@ -1,8 +1,11 @@
 {{define "body"}}
+<input type="file" id="file-selector" />
+
 <form action="/save?id={{ .ID }}" method="post">
 	<input type="text" name="title" value="{{.Title}}"><br>
 	<textarea name="content" rows=10 cols=60>{{.Content}}</textarea>
 	<br>
+	<input type="text" name="attachment_ids" id="attachment_ids" /><br>
 	<input type="submit" class="btn" value="kaydet">
 </form>
 {{end}}
