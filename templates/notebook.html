@@ -1,0 +1,11 @@
+{{define "body"}}
+<div class="notes-container">
+	{{range .}}
+	<div class="note-card">
+		<a href="/show?id={{.ID}}" class="caption">{{.Title}}</a><br>
+		{{.LastUpdate}}
+		<a href="/edit?id={{.ID}}" class="edit-link">düzenle</a>
+	</div>
+	{{end}}
+</div>
+{{end}}

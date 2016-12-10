@@ -15,6 +15,7 @@ type Page struct {
 	Content     string
 	HTMLContent template.HTML
 	UpdatedAt   int64
+	NotebookID  int
 }
 
 func (p Page) LastUpdate() string {
@@ -55,6 +56,35 @@ func FindPage(db *sql.DB, id int) (Page, error) {
 		UpdatedAt:   updatedAt,
 	}
 	return page, nil
+}
+
+func FindPagesOfNotebook(db *sql.DB, notebookID int) ([]Page, error) {
+	var pages []Page
+	var id int
+	var title []byte
+	var input []byte
+	var updatedAt int64
+
+	sql := "SELECT id, title, content, updated_at FROM pages WHERE notebook_id=? ORDER BY updated_at DESC"
+	rows, err := db.Query(sql, notebookID)
+	if err != nil {
+		return pages, err
+	}
+	for rows.Next() {
+		err = rows.Scan(&id, &title, &input, &updatedAt)
+		if err != nil {
+			return pages, err
+		}
+		output := blackfriday.MarkdownCommon(input)
+		page := Page{
+			ID:          id,
+			Title:       string(title),
+			HTMLContent: template.HTML(output),
+			UpdatedAt:   updatedAt,
+		}
+		pages = append(pages, page)
+	}
+	return pages, nil
 }
 
 func AllPages(db *sql.DB) ([]Page, error) {

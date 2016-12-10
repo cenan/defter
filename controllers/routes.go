@@ -14,12 +14,33 @@ import (
 
 func IndexPage(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		pages, err := models.AllPages(db)
+		//pages, err := models.AllPages(db)
+		notebooks, err := models.AllNotebooks(db)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		t := getTemplate("index")
+		err = t.ExecuteTemplate(w, "base", notebooks)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+}
+
+func NotebookPage(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.Atoi(r.URL.Query().Get("id"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		pages, err := models.FindPagesOfNotebook(db, id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		t := getTemplate("notebook")
 		err = t.ExecuteTemplate(w, "base", pages)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -54,11 +75,17 @@ func NewPage(db *sql.DB) http.HandlerFunc {
 
 func CreatePage(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		page := models.Page{
-			Title:   r.FormValue("title"),
-			Content: r.FormValue("content"),
+		notebookID, err := strconv.Atoi(r.FormValue("notebook_id"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
-		err := page.Save(db)
+		page := models.Page{
+			Title:      r.FormValue("title"),
+			Content:    r.FormValue("content"),
+			NotebookID: notebookID,
+		}
+		err = page.Save(db)
 		if err != nil {
 			log.Fatal(err)
 		}

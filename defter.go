@@ -16,6 +16,7 @@ import (
 
 func setupRoutes(db *sql.DB) {
 	http.Handle("/", controllers.IndexPage(db))
+	http.Handle("/notebook", controllers.NotebookPage(db))
 	http.Handle("/search", controllers.SearchPage(db))
 	http.Handle("/new", controllers.NewPage(db))
 	http.Handle("/create", controllers.CreatePage(db))
