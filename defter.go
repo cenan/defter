@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -41,6 +44,28 @@ func checkError(err error) {
 	}
 }
 
+func checkDbFile(filePath string) {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		dir, _ := filepath.Split(filePath)
+		os.MkdirAll(dir, 0777)
+	}
+}
+
+func checkDbSchema(db *sql.DB) {
+	files, _ := filepath.Glob("db/migration*.sql")
+	for _, f := range files {
+		file, err := os.Open(f)
+		checkError(err)
+		sql, err := ioutil.ReadAll(file)
+		checkError(err)
+		for _, stmt := range strings.Split(string(sql), ";") {
+			_, err := db.Exec(stmt)
+			checkError(err)
+		}
+		file.Close()
+	}
+}
+
 func main() {
 	cfg, err := ini.Load("config.ini")
 	checkError(err)
@@ -52,8 +77,10 @@ func main() {
 	if verboseOutput == false {
 		log.SetOutput(ioutil.Discard)
 	}
+	checkDbFile(dbPath)
 	db, err := sql.Open("sqlite3", dbPath)
 	checkError(err)
+	checkDbSchema(db)
 	defer db.Close()
 	startWebClient(db, port)
 }

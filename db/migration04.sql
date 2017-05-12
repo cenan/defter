@@ -1,6 +1,4 @@
-CREATE TABLE `notebooks` (
+CREATE TABLE IF NOT EXISTS `notebooks` (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `name` VARCHAR(255) NULL
 );
-
-ALTER TABLE `pages` ADD `notebook_id` INTEGER;
